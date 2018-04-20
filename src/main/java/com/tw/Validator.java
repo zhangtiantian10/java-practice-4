@@ -42,6 +42,9 @@ public class Validator {
 
   public boolean checkoutStudent(String studentStr) {
     String[] studentSplits = studentStr.split(", ");
+    if (studentSplits.length != 5) {
+      return false;
+    }
     Optional optional = Arrays.stream(studentSplits)
       .collect(Collectors.toList())
       .subList(2, studentSplits.length)
@@ -49,7 +52,7 @@ public class Validator {
       .filter(item -> !checkoutSubjective(item))
       .findFirst();
 
-    if (studentSplits.length != 5 || optional.isPresent() || !pattern.matcher(studentSplits[1]).matches()) {
+    if (optional.isPresent() || !pattern.matcher(studentSplits[1]).matches()) {
       return false;
     }
 
@@ -75,6 +78,9 @@ public class Validator {
   }
 
   public boolean checkoutStudentIds(String idStr) {
+    if (idStr.equals("")) {
+      return false;
+    }
     String[] ids = idStr.split(", ");
     Optional optional = Arrays.stream(ids)
       .filter(id -> !pattern.matcher(id).matches())
@@ -89,5 +95,13 @@ public class Validator {
       .collect(Collectors.toList());
 
     return true;
+  }
+
+  public String getStudentErrorMessage() {
+    return "请按正确的格式输入（格式：姓名, 学号, 学科: 成绩, ...）: ";
+  }
+
+  public String getStudentIdsErrorMessage() {
+    return "请按正确的格式输入要打印的学生的学号（格式： 学号, 学号,...），按回车提交: ";
   }
 }

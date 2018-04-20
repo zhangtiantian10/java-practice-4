@@ -8,28 +8,34 @@ public class Library {
   public static void main(String[] args) {
     Menu menu = new Menu();
     List<Student> students = new ArrayList<>();
+    Console console = new Console();
+
+    menu.printMenu(console);
+    menu.judgeNumber(console);
 
     while (menu.isAlive()) {
-      Console console = new Console();
       Validator validator = new Validator();
 
-      menu.printMenu(console);
-      menu.judgeNumber(console);
-
-      if (!console.getStudentStr().equals("")) {
+      if (console.getMenuNumber() == 1) {
         if (!validator.checkoutStudent(console.getStudentStr())) {
-          console.log("请按正确的格式输入要打印的学生的学号（格式： 学号, 学号,...），按回车提交：");
+          console.log(validator.getStudentErrorMessage());
+          console.readStudent();
         } else {
           Student student = validator.getStudent();
           students.add(student);
-          console.log("学生" + student.getName() +"的成绩被添加");
+          console.log("学生" + student.getName() +"的成绩被添加\n");
+          menu.printMenu(console);
+          menu.judgeNumber(console);
         }
-      } else if (!console.getIds().equals("")) {
+      } else if (console.getMenuNumber() == 2) {
         if (!validator.checkoutStudentIds(console.getIds())) {
-          console.log("请按正确的格式输入要打印的学生的学号（格式： 学号, 学号,...），按回车提交：");
+          console.log(validator.getStudentIdsErrorMessage());
+          console.readIds();
         } else {
           List<Integer> ids = validator.getIds();
-          console.log(students, ids);
+          console.log(menu.getSchoolReport(students, ids));
+          menu.printMenu(console);
+          menu.judgeNumber(console);
         }
       }
     }
